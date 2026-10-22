@@ -92,6 +92,18 @@ input:focus{border-color:var(--accent);box-shadow:0 0 0 4px color-mix(in srgb,va
   .item{grid-template-columns:auto 1fr;}
   .side{grid-column:1/-1;flex-direction:row;justify-content:space-between;align-items:center}
 }
+#auth{position:fixed;inset:0;z-index:10;display:grid;place-items:center;padding:16px;background:linear-gradient(160deg,var(--bg),var(--bg2))}
+#auth[hidden]{display:none}
+#auth .box{width:100%;max-width:380px;background:var(--card-solid);border:1px solid var(--line);border-radius:16px;padding:28px;box-shadow:var(--shadow)}
+#auth h2{font-size:1.3rem;font-weight:800;letter-spacing:-.02em;margin-bottom:4px}
+#auth p{color:var(--muted);font-size:.9rem;margin-bottom:18px}
+#auth label{margin-top:12px}
+#auth .btn{width:100%;margin-top:18px}
+#auth .alt{display:block;margin:14px auto 0;background:none;border:0;color:var(--accent);font:inherit;font-weight:600;font-size:.88rem;cursor:pointer}
+#auth-err{color:var(--bad);font-size:.85rem;margin-top:12px}
+#auth-ok{color:var(--good);font-size:.85rem;margin-top:12px}
+#auth-err:empty,#auth-ok:empty{display:none}
+#auth .alt[hidden]{display:none}
 </style>
 </head>
 <body>
@@ -101,7 +113,7 @@ input:focus{border-color:var(--accent);box-shadow:0 0 0 4px color-mix(in srgb,va
       <h1>Aulas <span>pendentes</span></h1>
       <p class="sub">Questões por fazer, matérias, frentes e a data da próxima aula — tudo num lugar só.</p>
     </div>
-    <button class="icon-btn" id="theme" title="Alternar tema">◐</button>
+    <div style="display:flex;gap:8px"><button class="icon-btn" id="logout" title="Sair" hidden>⎋</button><button class="icon-btn" id="theme" title="Alternar tema">◐</button></div>
   </header>
 
   <section class="stats">
@@ -143,7 +155,30 @@ input:focus{border-color:var(--accent);box-shadow:0 0 0 4px color-mix(in srgb,va
   <div class="list" id="list"></div>
 </div>
 
+<div id="auth" hidden>
+  <form class="box" id="auth-form" autocomplete="on">
+    <h2 id="auth-title">Entrar</h2>
+    <p>Acesse suas aulas pendentes em qualquer aparelho.</p>
+    <label for="au">E-mail</label><input id="au" type="email" autocomplete="email" placeholder="voce@exemplo.com" required>
+    <label for="ap">Senha</label><input id="ap" type="password" autocomplete="current-password" required>
+    <div id="auth-err"></div><div id="auth-ok"></div>
+    <button class="btn primary" id="auth-go" type="submit">Entrar</button>
+    <button class="alt" id="auth-alt" type="button">Criar conta</button>
+    <button class="alt" id="auth-forgot" type="button">Esqueci a senha</button>
+  </form>
+</div>
+
 <script>
+// Preencha com a configuração do seu projeto Firebase para ativar login + sincronização entre aparelhos.
+// Enquanto for null, o site funciona só neste navegador, sem login.
+const FIREBASE_CONFIG = {
+  apiKey: "AIzaSyDFvuUnkg9rEaNQaheMMKwEpBN_tly4qLk",
+  authDomain: "exercicios-e-aulas-pendentes.firebaseapp.com",
+  projectId: "exercicios-e-aulas-pendentes",
+  storageBucket: "exercicios-e-aulas-pendentes.firebasestorage.app",
+  messagingSenderId: "937837891622",
+  appId: "1:937837891622:web:eef4fd4ade1bf452ad56e7"
+};
 const KEY = 'aulas-pendentes-v1';
 const $ = id => document.getElementById(id);
 let items = [], filter = 'Todas', editId = null, chosen = null;
@@ -161,7 +196,11 @@ const aulaTag = n => {
   const letra = ((String(n || '').match(/[A-Za-z]/) || [''])[0]).toUpperCase(), num = (String(n || '').match(/\d+/) || [''])[0];
   return (letra ? ` · Frente ${letra}` : '') + (num ? ` · Aula ${num}` : '');
 };
-const save = () => { try { localStorage.setItem(KEY, JSON.stringify(items)); } catch {} };
+let cloud = null;
+const save = () => {
+  if (cloud) { cloud.set({ items }).catch(() => alert('Não foi possível salvar na nuvem.')); return; }
+  try { localStorage.setItem(KEY, JSON.stringify(items)); } catch {}
+};
 
 const iso = d => `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
 const parse = s => { const [y,m,d] = s.split('-').map(Number); return new Date(y, m-1, d); };
@@ -269,6 +308,69 @@ $('theme').onclick = () => {
 try { const t = localStorage.getItem(KEY + '-theme'); if (t) document.documentElement.dataset.theme = t; } catch {}
 
 render();
+
+const loadScript = src => new Promise((ok, fail) => { const t = document.createElement('script'); t.src = src; t.onload = ok; t.onerror = fail; document.head.appendChild(t); });
+async function initCloud() {
+  $('auth').hidden = false;
+  const base = 'https://www.gstatic.com/firebasejs/10.12.2/';
+  try {
+    await loadScript(base + 'firebase-app-compat.js');
+    await loadScript(base + 'firebase-auth-compat.js');
+    await loadScript(base + 'firebase-firestore-compat.js');
+  } catch { $('auth-err').textContent = 'Sem conexão com o servidor.'; return; }
+  firebase.initializeApp(FIREBASE_CONFIG);
+  const auth = firebase.auth(), db = firebase.firestore();
+  let creating = false, unsub = null;
+  const email = u => u.trim().toLowerCase();
+  const erros = {
+    'auth/invalid-credential': 'E-mail ou senha incorretos.', 'auth/wrong-password': 'E-mail ou senha incorretos.', 'auth/invalid-email': 'E-mail inválido.', 'auth/missing-email': 'Digite o seu e-mail.',
+    'auth/user-not-found': 'E-mail ou senha incorretos.', 'auth/email-already-in-use': 'Já existe uma conta com esse e-mail.',
+    'auth/weak-password': 'A senha precisa ter ao menos 6 caracteres.', 'auth/operation-not-allowed': 'Criação de contas desativada.',
+    'auth/too-many-requests': 'Muitas tentativas. Aguarde um pouco.', 'auth/network-request-failed': 'Sem conexão.'
+  };
+  const setMode = c => {
+    creating = c;
+    $('auth-title').textContent = c ? 'Criar conta' : 'Entrar';
+    $('auth-go').textContent = c ? 'Criar conta' : 'Entrar';
+    $('auth-alt').textContent = c ? 'Já tenho conta' : 'Criar conta';
+    $('ap').autocomplete = c ? 'new-password' : 'current-password';
+    $('auth-forgot').hidden = c;
+    $('auth-err').textContent = $('auth-ok').textContent = '';
+  };
+  $('auth-alt').onclick = () => setMode(!creating);
+  $('auth-forgot').onclick = async () => {
+    $('auth-err').textContent = $('auth-ok').textContent = '';
+    const mail = email($('au').value);
+    if (!mail) { $('auth-err').textContent = 'Digite o seu e-mail acima.'; return; }
+    try {
+      await auth.sendPasswordResetEmail(mail);
+      $('auth-ok').textContent = 'Se existir uma conta com esse e-mail, enviamos um link para redefinir a senha. Veja também o spam.';
+    } catch (err) { $('auth-err').textContent = erros[err.code] || 'Erro: ' + err.code; }
+  };
+  $('auth-form').addEventListener('submit', async e => {
+    e.preventDefault(); $('auth-err').textContent = $('auth-ok').textContent = '';
+    try {
+      if (creating) await auth.createUserWithEmailAndPassword(email($('au').value), $('ap').value);
+      else await auth.signInWithEmailAndPassword(email($('au').value), $('ap').value);
+    } catch (err) { $('auth-err').textContent = erros[err.code] || 'Erro: ' + err.code; }
+  });
+  $('logout').onclick = () => auth.signOut();
+  auth.onAuthStateChanged(user => {
+    if (unsub) { unsub(); unsub = null; }
+    if (user) {
+      const ref = db.collection('users').doc(user.uid);
+      $('auth').hidden = true; $('logout').hidden = false; $('ap').value = '';
+      unsub = ref.onSnapshot(snap => {
+        if (!snap.exists) { cloud = ref; save(); return; }
+        cloud = ref; items = snap.data().items || []; render();
+      }, () => { $('auth').hidden = false; $('auth-err').textContent = 'Sem permissão para ler os dados.'; });
+    } else {
+      cloud = null; items = []; render();
+      $('auth').hidden = false; $('logout').hidden = true;
+    }
+  });
+}
+if (FIREBASE_CONFIG) initCloud();
 </script>
 </body>
 </html>
