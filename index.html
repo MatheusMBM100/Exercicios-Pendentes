@@ -4,6 +4,13 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Aulas Pendentes</title>
+<meta name="theme-color" content="#1d6fe8">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Aulas">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
@@ -37,7 +44,7 @@ h1{font-size:clamp(1.8rem,5vw,2.4rem);line-height:1.1;letter-spacing:-.035em;fon
 h1 span{color:var(--accent)}
 .sub{color:var(--muted);margin-top:8px;font-size:.95rem}
 .icon-btn{border:1px solid var(--line);background:var(--card);backdrop-filter:blur(10px);color:var(--ink);width:42px;height:42px;border-radius:14px;cursor:pointer;font-size:18px;flex:none}
-.stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-bottom:20px}
+.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-bottom:20px}
 .stat{background:var(--card);backdrop-filter:blur(14px);border:1px solid var(--line);border-radius:14px;padding:16px 18px;box-shadow:var(--shadow)}
 .stat b{display:block;font-size:1.7rem;font-weight:700;letter-spacing:-.02em;line-height:1.15}
 .stat small{color:var(--muted);font-size:.78rem;text-transform:uppercase;letter-spacing:.08em;font-weight:600}
@@ -88,6 +95,7 @@ input:focus{border-color:var(--accent);box-shadow:0 0 0 4px color-mix(in srgb,va
 .empty .big{font-size:2.6rem;margin-bottom:6px}
 @media (max-width:640px){
   .grid{grid-template-columns:1fr}
+  .stats{grid-template-columns:repeat(2,minmax(0,1fr))}
   .stats{gap:8px}.stat{padding:12px}.stat b{font-size:1.25rem}.stat small{font-size:.62rem;letter-spacing:.04em}
   .item{grid-template-columns:auto 1fr;}
   .side{grid-column:1/-1;flex-direction:row;justify-content:space-between;align-items:center}
@@ -104,6 +112,41 @@ input:focus{border-color:var(--accent);box-shadow:0 0 0 4px color-mix(in srgb,va
 #auth-ok{color:var(--good);font-size:.85rem;margin-top:12px}
 #auth-err:empty,#auth-ok:empty{display:none}
 #auth .alt[hidden]{display:none}
+.hbtns{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+.icon-btn[hidden]{display:none}
+.muted{color:var(--muted);font-size:.9rem}
+button.stat{font:inherit;color:inherit;text-align:left;cursor:pointer;width:100%}
+button.stat:hover{border-color:var(--bad)}
+button.stat.on{border-color:var(--bad);box-shadow:0 0 0 3px #e5484d22}
+.stat.alert b{color:var(--bad)}
+.goal{display:flex;align-items:center;gap:18px;flex-wrap:wrap;padding:18px 22px}
+.goal .gt{flex:1;min-width:220px}
+.bar{height:8px;border-radius:99px;background:var(--line);overflow:hidden;margin-top:10px}
+.bar>i{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,var(--accent),var(--accent2));transition:width .3s}
+.bar.mini{height:5px;margin-top:10px;max-width:260px}
+.mini-t{font-size:.72rem;color:var(--muted);margin-top:4px}
+details.panel summary{cursor:pointer;font-weight:700;font-size:.95rem;list-style:none}
+details.panel summary::-webkit-details-marker{display:none}
+details.panel summary::after{content:"+";float:right;color:var(--muted);font-weight:500}
+details.panel[open] summary::after{content:"−"}
+.prow{margin-top:16px}
+.prow .top{display:flex;justify-content:space-between;font-size:.85rem;font-weight:600;margin-bottom:-2px}
+.prow small{color:var(--muted);font-weight:500}
+.tabs{display:inline-flex;background:var(--card-solid);border:1.5px solid var(--line);border-radius:10px;padding:3px}
+.tabs button{border:0;background:transparent;color:var(--muted);font:inherit;font-weight:600;font-size:.85rem;padding:7px 14px;border-radius:8px;cursor:pointer}
+.tabs button.on{background:var(--accent);color:#fff}
+.filters-row{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px}
+.filters-row input{flex:1;min-width:180px}
+.filters-row select{font:inherit;color:var(--ink);background:var(--card-solid);border:1.5px solid var(--line);border-radius:10px;padding:11px 13px;outline:none}
+.item.late::before{background:var(--bad)}
+.item.done{opacity:.85}
+.tools .strong{color:var(--accent)}
+.post{grid-column:1/-1;display:flex;gap:8px;flex-wrap:wrap;align-items:center;padding-top:12px;border-top:1px dashed var(--line);font-size:.85rem;color:var(--muted)}
+.post input{width:auto;padding:8px 10px}
+.post .chip{padding:7px 12px;font-size:.8rem}
+#toast{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);z-index:20;background:#0f2430;color:#fff;border-radius:12px;padding:12px 16px;display:flex;gap:16px;align-items:center;box-shadow:0 10px 30px -8px #0008;font-size:.9rem;max-width:calc(100vw - 32px)}
+#toast[hidden]{display:none}
+#toast button{background:none;border:0;color:#7fe3c8;font:inherit;font-weight:700;cursor:pointer;white-space:nowrap}
 </style>
 </head>
 <body>
@@ -113,14 +156,22 @@ input:focus{border-color:var(--accent);box-shadow:0 0 0 4px color-mix(in srgb,va
       <h1>Aulas <span>pendentes</span></h1>
       <p class="sub">Questões por fazer, matérias, frentes e a data da próxima aula — tudo num lugar só.</p>
     </div>
-    <div style="display:flex;gap:8px"><button class="icon-btn" id="logout" title="Sair" hidden>⎋</button><button class="icon-btn" id="theme" title="Alternar tema">◐</button></div>
+    <div class="hbtns">
+      <button class="icon-btn" id="csv" title="Exportar para planilha (CSV)" hidden>⤓</button>
+      <button class="icon-btn" id="bell" title="Lembretes" hidden>🔕</button>
+      <button class="icon-btn" id="logout" title="Sair" hidden>⎋</button>
+      <button class="icon-btn" id="theme" title="Alternar tema">◐</button>
+    </div>
   </header>
 
   <section class="stats">
     <div class="stat"><b id="s-aulas">0</b><small>Aulas</small></div>
     <div class="stat"><b id="s-q">0</b><small>Questões pendentes</small></div>
+    <button class="stat" id="s-late-card" type="button" title="Mostrar só as atrasadas"><b id="s-late">0</b><small>Atrasadas</small></button>
     <div class="stat"><b id="s-next">—</b><small>Próxima aula</small></div>
   </section>
+
+  <section class="panel goal" id="goal"></section>
 
   <form class="panel" id="form" autocomplete="off">
     <h2 id="form-title">Nova aula</h2>
@@ -148,17 +199,36 @@ input:focus{border-color:var(--accent);box-shadow:0 0 0 4px color-mix(in srgb,va
     </div>
   </form>
 
+  <details class="panel" id="prog">
+    <summary>Progresso por matéria</summary>
+    <div id="prog-list"></div>
+  </details>
+
   <div class="toolbar">
     <h2>Suas aulas</h2>
-    <div class="chips" id="filters"></div>
+    <div class="tabs">
+      <button type="button" class="on" id="tab-pend">Pendentes</button>
+      <button type="button" id="tab-done">Concluídas</button>
+    </div>
   </div>
+  <div class="filters-row">
+    <input id="q" type="search" placeholder="Buscar aula ou matéria…" aria-label="Buscar">
+    <select id="sort" aria-label="Ordenar">
+      <option value="data">Ordenar: data</option>
+      <option value="questoes">Ordenar: mais questões</option>
+      <option value="materia">Ordenar: matéria</option>
+    </select>
+  </div>
+  <div class="chips" id="filters" style="margin-bottom:14px"></div>
   <div class="list" id="list"></div>
 </div>
+
+<div id="toast" role="status" hidden></div>
 
 <div id="auth" hidden>
   <form class="box" id="auth-form" autocomplete="on">
     <h2 id="auth-title">Entrar</h2>
-    <p>Acesse suas aulas pendentes em qualquer aparelho.</p>
+    <p id="auth-sub">Entre para ver as suas aulas.</p>
     <label for="au">E-mail</label><input id="au" type="email" autocomplete="email" placeholder="voce@exemplo.com" required>
     <label for="ap">Senha</label><input id="ap" type="password" autocomplete="current-password" required>
     <div id="auth-err"></div><div id="auth-ok"></div>
@@ -169,8 +239,6 @@ input:focus{border-color:var(--accent);box-shadow:0 0 0 4px color-mix(in srgb,va
 </div>
 
 <script>
-// Preencha com a configuração do seu projeto Firebase para ativar login + sincronização entre aparelhos.
-// Enquanto for null, o site funciona só neste navegador, sem login.
 const FIREBASE_CONFIG = {
   apiKey: "AIzaSyDFvuUnkg9rEaNQaheMMKwEpBN_tly4qLk",
   authDomain: "exercicios-e-aulas-pendentes.firebaseapp.com",
@@ -181,27 +249,10 @@ const FIREBASE_CONFIG = {
 };
 const KEY = 'aulas-pendentes-v1';
 const $ = id => document.getElementById(id);
-let items = [], filter = 'Todas', editId = null, chosen = null;
+let items = [], goal = 0, log = {}, cloud = null;
+let filter = 'Todas', view = 'pend', query = '', sortBy = 'data', onlyLate = false, openPost = null, editId = null, chosen = null;
 
-try { items = JSON.parse(localStorage.getItem(KEY)) || []; } catch { items = []; }
-const SEED = [{ id: 'seed-geo-25b', nome: 'Geografia', materia: 'Geografia', num: '25B', qtd: 20, data: '2026-10-29' },
-  { id: 'seed-redacao-enem', nome: 'Redação', materia: 'Redação', num: '', qtd: 1, data: '2026-10-29' }];
-try {
-  const done = JSON.parse(localStorage.getItem(KEY + '-seeded') || '[]');
-  SEED.filter(x => !done.includes(x.id)).forEach(x => { items.push(x); done.push(x.id); });
-  localStorage.setItem(KEY + '-seeded', JSON.stringify(done)); localStorage.setItem(KEY, JSON.stringify(items));
-} catch {}
-items.forEach(i => { if (i.frente !== undefined) { i.materia = i.materia || i.frente.split(' — ')[0]; delete i.frente; } });
-const aulaTag = n => {
-  const letra = ((String(n || '').match(/[A-Za-z]/) || [''])[0]).toUpperCase(), num = (String(n || '').match(/\d+/) || [''])[0];
-  return (letra ? ` · Frente ${letra}` : '') + (num ? ` · Aula ${num}` : '');
-};
-let cloud = null;
-const save = () => {
-  if (cloud) { cloud.set({ items }).catch(() => alert('Não foi possível salvar na nuvem.')); return; }
-  try { localStorage.setItem(KEY, JSON.stringify(items)); } catch {}
-};
-
+// ---------- utilidades ----------
 const iso = d => `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
 const parse = s => { const [y,m,d] = s.split('-').map(Number); return new Date(y, m-1, d); };
 const today = () => { const d = new Date(); d.setHours(0,0,0,0); return d; };
@@ -209,8 +260,49 @@ const addDays = n => { const d = today(); d.setDate(d.getDate()+n); return d; };
 const diffDays = s => Math.round((parse(s) - today()) / 864e5);
 const fmt = s => parse(s).toLocaleDateString('pt-BR', {weekday:'short', day:'2-digit', month:'short'});
 const hue = str => { let h = 0; for (const c of str.toLowerCase()) h = (h*31 + c.charCodeAt(0)) % 360; return 145 + h % 85; };
-const esc = s => s.replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const plain = s => String(s || '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
+const parseNum = n => { const s = String(n || ''); return { letra: ((s.match(/[A-Za-z]/) || [''])[0]).toUpperCase(), num: (s.match(/\d+/) || [''])[0] }; };
+const aulaTag = n => { const { letra, num } = parseNum(n); return (letra ? ` · Frente ${letra}` : '') + (num ? ` · Aula ${num}` : ''); };
+const norm = i => ({ ...i, qtd: +i.qtd || 0, total: Math.max(+i.total || 0, +i.qtd || 0), concluida: !!i.concluida });
+const byDate = (a, b) => a.data.localeCompare(b.data) || a.materia.localeCompare(b.materia) || String(a.num||'').localeCompare(String(b.num||''), 'pt', {numeric:true});
 
+const SEED = [{ id: 'seed-geo-25b', nome: 'Geografia', materia: 'Geografia', num: '25B', qtd: 20, total: 20, data: '2026-10-29' },
+  { id: 'seed-redacao-enem', nome: 'Redação', materia: 'Redação', num: '', qtd: 1, total: 1, data: '2026-10-29' }];
+function legacy() {
+  let old = [];
+  try { old = JSON.parse(localStorage.getItem(KEY)) || []; } catch {}
+  old.forEach(i => { if (i.frente !== undefined) { i.materia = i.materia || i.frente.split(' — ')[0]; delete i.frente; } });
+  return (old.length ? old : SEED).map(norm);
+}
+
+// ---------- salvar, desfazer, aviso ----------
+const save = () => { if (cloud) cloud.set({ items, goal, log }).catch(() => toast('Não foi possível salvar. Verifique a conexão.')); };
+const snapshot = () => JSON.stringify({ items, log });
+function restore(str) { const d = JSON.parse(str); items = d.items; log = d.log; save(); render(); }
+function change(msg, fn, extra = []) {
+  const before = snapshot(); fn(); save(); render();
+  toast(msg, [{ label: 'Desfazer', fn: () => restore(before) }, ...extra]);
+}
+let toastTimer;
+function toast(msg, actions = []) {
+  const el = $('toast'); el.innerHTML = `<span>${esc(msg)}</span>`;
+  actions.forEach(a => { const b = document.createElement('button'); b.type = 'button'; b.textContent = a.label; b.onclick = () => { el.hidden = true; a.fn(); }; el.appendChild(b); });
+  el.hidden = false; clearTimeout(toastTimer); toastTimer = setTimeout(() => el.hidden = true, 8000);
+}
+
+// ---------- meta semanal ----------
+function bump(n) {
+  const k = iso(today());
+  log[k] = Math.max(0, (log[k] || 0) + n);
+  const cut = iso(addDays(-120)); Object.keys(log).forEach(d => { if (d < cut || !log[d]) delete log[d]; });
+}
+function weekDone() {
+  const d = today(); d.setDate(d.getDate() - ((d.getDay() + 6) % 7)); const from = iso(d);
+  return Object.entries(log).reduce((s, [k, v]) => k >= from ? s + v : s, 0);
+}
+
+// ---------- formulário ----------
 function setChosen(dateStr, key) {
   chosen = dateStr;
   document.querySelectorAll('#chips .chip').forEach(c => c.classList.toggle('on', c.dataset.d === key));
@@ -219,9 +311,8 @@ function setChosen(dateStr, key) {
 }
 $('chips').addEventListener('click', e => {
   const b = e.target.closest('.chip'); if (!b) return;
-  if (b.dataset.d === 'custom') {
-    setChosen($('custom').value || null, 'custom'); $('custom').focus();
-  } else setChosen(iso(addDays(+b.dataset.d)), b.dataset.d);
+  if (b.dataset.d === 'custom') { setChosen($('custom').value || null, 'custom'); $('custom').focus(); }
+  else setChosen(iso(addDays(+b.dataset.d)), b.dataset.d);
 });
 $('custom').addEventListener('input', e => setChosen(e.target.value || null, 'custom'));
 
@@ -236,11 +327,20 @@ $('form').addEventListener('submit', e => {
   e.preventDefault();
   if (!chosen) { $('picked').textContent = '⚠️ Escolha quando é a próxima aula.'; return; }
   const data = { nome: $('nome').value.trim(), materia: $('materia').value.trim(), num: $('num').value.trim(), qtd: Math.max(0, +$('qtd').value || 0), data: chosen };
-  if (editId) items = items.map(i => i.id === editId ? { ...i, ...data } : i);
-  else items.push({ id: crypto.randomUUID?.() || String(Date.now()), ...data });
+  if (editId) items = items.map(i => i.id === editId ? norm({ ...i, ...data, total: Math.max(i.total, data.qtd) }) : i);
+  else items.push({ id: crypto.randomUUID?.() || String(Date.now()), ...data, total: data.qtd, concluida: false });
   save(); resetForm(); render();
 });
 
+function suggestNext(it) {
+  resetForm();
+  $('materia').value = it.materia;
+  $('num').value = String(it.num || '').replace(/\d+/, d => +d + 1);
+  $('form-title').textContent = 'Próxima aula de ' + it.materia;
+  $('form').scrollIntoView({ behavior: 'smooth' }); $('nome').focus({ preventScroll: true });
+}
+
+// ---------- desenho da tela ----------
 function badge(n) {
   if (n < 0) return `<span class="badge b-late">Atrasada · ${-n} ${-n===1?'dia':'dias'}</span>`;
   if (n === 0) return `<span class="badge b-today">Hoje</span>`;
@@ -248,57 +348,169 @@ function badge(n) {
   return `<span class="badge ${n<=3?'b-soon':'b-ok'}">Em ${n} dias</span>`;
 }
 
-function render() {
-  const frentes = [...new Set(items.map(i => i.materia))].sort();
-  if (filter !== 'Todas' && !frentes.includes(filter)) filter = 'Todas';
-  $('materias').innerHTML = frentes.map(f => `<option value="${esc(f)}">`).join('');
-  $('filters').innerHTML = ['Todas', ...frentes].map(f => `<button class="chip ${f===filter?'on':''}" data-f="${esc(f)}">${esc(f)}</button>`).join('');
-
-  const shown = items.filter(i => filter === 'Todas' || i.materia === filter).sort((a,b) => a.data.localeCompare(b.data) || a.materia.localeCompare(b.materia) || String(a.num||'').localeCompare(String(b.num||''), 'pt', {numeric:true}));
-
-  $('s-aulas').textContent = items.length;
-  $('s-q').textContent = items.reduce((s,i) => s + i.qtd, 0);
-  const next = [...items].sort((a,b) => a.data.localeCompare(b.data))[0];
-  $('s-next').textContent = next ? (diffDays(next.data) === 0 ? 'Hoje' : diffDays(next.data) === 1 ? 'Amanhã' : fmt(next.data).replace('.','')) : '—';
-
-  $('list').innerHTML = shown.length ? shown.map(i => `
-    <article class="item" style="--h:${hue(i.materia)}">
+function card(i) {
+  const late = !i.concluida && diffDays(i.data) < 0, h = hue(i.materia);
+  const pct = i.total ? Math.round((i.total - i.qtd) / i.total * 100) : 0;
+  const tag = `<span class="tag">${esc(i.materia)}${aulaTag(i.num)}</span>`;
+  if (i.concluida) return `
+    <article class="item done" style="--h:${h}">
+      <div class="count"><div>✓<small>feita</small></div></div>
+      <div class="info"><h3>${esc(i.nome)}</h3>
+        <div class="meta">${tag}<span class="date">Concluída${i.concluidaEm ? ' em ' + fmt(i.concluidaEm) : ''}</span></div></div>
+      <div class="side"><div class="tools">
+        <button data-a="reopen" data-id="${i.id}">Reabrir</button>
+        <button data-a="del" data-id="${i.id}">Remover</button></div></div>
+    </article>`;
+  return `
+    <article class="item ${late ? 'late' : ''}" style="--h:${h}">
       <div class="count"><div>${i.qtd}<small>questões</small></div></div>
-      <div class="info">
-        <h3>${esc(i.nome)}</h3>
-        <div class="meta"><span class="tag">${esc(i.materia)}${aulaTag(i.num)}</span><span class="date">${fmt(i.data)}</span>${badge(diffDays(i.data))}</div>
-      </div>
+      <div class="info"><h3>${esc(i.nome)}</h3>
+        <div class="meta">${tag}<span class="date">${fmt(i.data)}</span>${badge(diffDays(i.data))}</div>
+        ${i.total > i.qtd ? `<div class="bar mini"><i style="width:${pct}%"></i></div><div class="mini-t">${i.total - i.qtd} de ${i.total} feitas</div>` : ''}</div>
       <div class="side">
         <div class="step" title="Questões pendentes">
           <button data-a="dec" data-id="${i.id}" aria-label="Fiz uma questão">−</button>
           <button data-a="inc" data-id="${i.id}" aria-label="Mais uma questão">+</button>
         </div>
         <div class="tools">
+          <button data-a="done" data-id="${i.id}" class="strong">Concluir</button>
+          <button data-a="post-toggle" data-id="${i.id}">Adiar</button>
           <button data-a="edit" data-id="${i.id}">Editar</button>
           <button data-a="del" data-id="${i.id}">Remover</button>
         </div>
       </div>
-    </article>`).join('')
-  : `<div class="empty"><div class="big">📚</div>${items.length ? 'Nenhuma aula nessa matéria.' : 'Nenhuma aula ainda. Adicione a primeira acima!'}</div>`;
+      ${openPost === i.id ? `<div class="post"><span>Adiar:</span>
+        <button class="chip" data-a="post" data-id="${i.id}" data-d="1">+1 dia</button>
+        <button class="chip" data-a="post" data-id="${i.id}" data-d="2">+2 dias</button>
+        <button class="chip" data-a="post" data-id="${i.id}" data-d="7">+1 semana</button>
+        <input type="date" data-a="postdate" data-id="${i.id}" aria-label="Outra data"></div>` : ''}
+    </article>`;
 }
 
+function render() {
+  const pend = items.filter(i => !i.concluida), feitas = items.filter(i => i.concluida);
+  const late = pend.filter(i => diffDays(i.data) < 0);
+  $('s-aulas').textContent = pend.length;
+  $('s-q').textContent = pend.reduce((s, i) => s + i.qtd, 0);
+  $('s-late').textContent = late.length;
+  $('s-late-card').classList.toggle('alert', late.length > 0);
+  $('s-late-card').classList.toggle('on', onlyLate);
+  const next = [...pend].filter(i => diffDays(i.data) >= 0).sort(byDate)[0];
+  $('s-next').textContent = next ? (diffDays(next.data) === 0 ? 'Hoje' : diffDays(next.data) === 1 ? 'Amanhã' : fmt(next.data).replace('.', '')) : '—';
+
+  const wk = weekDone();
+  $('goal').innerHTML = goal
+    ? `<div class="gt"><b>Meta da semana</b> <span class="muted">${wk} de ${goal} questões${wk >= goal ? ' 🎉' : ''}</span><div class="bar"><i style="width:${Math.min(100, wk / goal * 100)}%"></i></div></div><button class="btn ghost" data-goal>Alterar meta</button>`
+    : `<div class="gt"><b>Meta da semana</b><div class="muted">Defina quantas questões quer resolver por semana.</div></div><button class="btn ghost" data-goal>Definir meta</button>`;
+
+  const mats = [...new Set(items.map(i => i.materia))].sort();
+  $('prog-list').innerHTML = mats.length ? mats.map(m => {
+    const its = items.filter(i => i.materia === m), tot = its.reduce((s, i) => s + i.total, 0), fe = its.reduce((s, i) => s + i.total - i.qtd, 0), p = tot ? Math.round(fe / tot * 100) : 0;
+    return `<div class="prow"><div class="top"><span>${esc(m)}</span><small>${fe} de ${tot} · ${p}%</small></div><div class="bar" style="--h:${hue(m)}"><i style="width:${p}%;background:hsl(${hue(m)} 70% 50%)"></i></div></div>`;
+  }).join('') : '<p class="muted" style="margin-top:12px">Sem dados ainda.</p>';
+
+  if (filter !== 'Todas' && !mats.includes(filter)) filter = 'Todas';
+  $('materias').innerHTML = mats.map(f => `<option value="${esc(f)}">`).join('');
+  $('filters').innerHTML = ['Todas', ...mats].map(f => `<button class="chip ${f===filter?'on':''}" data-f="${esc(f)}">${esc(f)}</button>`).join('');
+  $('tab-pend').textContent = `Pendentes (${pend.length})`; $('tab-done').textContent = `Concluídas (${feitas.length})`;
+  $('tab-pend').classList.toggle('on', view === 'pend'); $('tab-done').classList.toggle('on', view === 'done');
+
+  const q = plain(query);
+  let shown = (view === 'pend' ? pend : feitas).filter(i =>
+    (filter === 'Todas' || i.materia === filter) && (!onlyLate || view !== 'pend' || diffDays(i.data) < 0) &&
+    (!q || plain(`${i.nome} ${i.materia} ${i.num}`).includes(q)));
+  if (view === 'done') shown.sort((a, b) => (b.concluidaEm || '').localeCompare(a.concluidaEm || ''));
+  else if (sortBy === 'questoes') shown.sort((a, b) => b.qtd - a.qtd || byDate(a, b));
+  else if (sortBy === 'materia') shown.sort((a, b) => a.materia.localeCompare(b.materia) || byDate(a, b));
+  else shown.sort(byDate);
+
+  $('list').innerHTML = shown.length ? shown.map(card).join('')
+    : `<div class="empty"><div class="big">${view === 'pend' ? '📚' : '✅'}</div>${
+        items.length && (q || filter !== 'Todas' || onlyLate) ? 'Nenhuma aula encontrada com esses filtros.'
+        : view === 'pend' ? (items.length ? 'Tudo em dia! Nenhuma aula pendente.' : 'Nenhuma aula ainda. Adicione a primeira acima!') : 'Nenhuma aula concluída ainda.'}</div>`;
+}
+
+// ---------- eventos ----------
 $('filters').addEventListener('click', e => { const b = e.target.closest('[data-f]'); if (b) { filter = b.dataset.f; render(); } });
+$('tab-pend').onclick = () => { view = 'pend'; render(); };
+$('tab-done').onclick = () => { view = 'done'; render(); };
+$('q').addEventListener('input', e => { query = e.target.value; render(); });
+$('sort').addEventListener('change', e => { sortBy = e.target.value; render(); });
+$('s-late-card').onclick = () => { onlyLate = !onlyLate; view = 'pend'; render(); };
+$('goal').addEventListener('click', e => {
+  if (!e.target.closest('[data-goal]')) return;
+  const v = prompt('Quantas questões você quer resolver por semana?', goal || 50);
+  if (v === null) return;
+  goal = Math.max(0, Math.round(+v) || 0); save(); render();
+});
+
+function shift(it, days) { const d = parse(it.data) > today() ? parse(it.data) : today(); d.setDate(d.getDate() + days); return iso(d); }
+function postpone(it, date) {
+  openPost = null;
+  change(`Aula adiada para ${fmt(date)}.`, () => { it.data = date; });
+}
 $('list').addEventListener('click', e => {
-  const b = e.target.closest('[data-a]'); if (!b) return;
+  const b = e.target.closest('[data-a]'); if (!b || b.tagName === 'INPUT') return;
   const it = items.find(i => i.id === b.dataset.id); if (!it) return;
   const a = b.dataset.a;
-  if (a === 'dec') it.qtd = Math.max(0, it.qtd - 1);
-  if (a === 'inc') it.qtd++;
-  if (a === 'del') { if (!confirm(`Remover "${it.nome}"?`)) return; items = items.filter(i => i !== it); }
-  if (a === 'edit') {
+  if (a === 'dec' && it.qtd > 0) { it.qtd--; bump(1); }
+  else if (a === 'inc') { if (it.qtd < it.total) bump(-1); else it.total++; it.qtd++; }
+  else if (a === 'post-toggle') { openPost = openPost === it.id ? null : it.id; render(); return; }
+  else if (a === 'post') { postpone(it, shift(it, +b.dataset.d)); return; }
+  else if (a === 'done') {
+    change('Aula concluída.', () => { bump(it.qtd); it.qtd = 0; it.concluida = true; it.concluidaEm = iso(today()); openPost = null; },
+      [{ label: 'Próxima aula →', fn: () => suggestNext(it) }]); return;
+  }
+  else if (a === 'reopen') { change('Aula reaberta.', () => { it.concluida = false; delete it.concluidaEm; it.qtd = it.total; }); return; }
+  else if (a === 'del') { change(`"${it.nome}" removida.`, () => { items = items.filter(i => i !== it); }); return; }
+  else if (a === 'edit') {
     editId = it.id; $('nome').value = it.nome; $('materia').value = it.materia; $('num').value = it.num || ''; $('qtd').value = it.qtd;
     setChosen(it.data, 'custom'); $('custom').value = it.data;
     $('form-title').textContent = 'Editar aula'; $('submit').textContent = 'Salvar'; $('cancel').hidden = false;
-    $('form').scrollIntoView({behavior:'smooth'}); return;
+    $('form').scrollIntoView({ behavior: 'smooth' }); return;
   }
+  else return;
   save(); render();
 });
+$('list').addEventListener('change', e => {
+  if (e.target.dataset.a !== 'postdate' || !e.target.value) return;
+  const it = items.find(i => i.id === e.target.dataset.id); if (it) postpone(it, e.target.value);
+});
 
+// ---------- exportar ----------
+$('csv').onclick = () => {
+  const rows = [['Matéria', 'Frente', 'Aula', 'Assunto', 'Questões pendentes', 'Total de questões', 'Próxima aula', 'Situação']];
+  [...items].sort(byDate).forEach(i => { const { letra, num } = parseNum(i.num);
+    rows.push([i.materia, letra, num, i.nome, i.qtd, i.total, i.data, i.concluida ? 'Concluída' : diffDays(i.data) < 0 ? 'Atrasada' : 'Pendente']); });
+  const csv = '﻿' + rows.map(r => r.map(c => `"${String(c).replace(/"/g, '""')}"`).join(';')).join('\r\n');
+  const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([csv], { type: 'text/csv;charset=utf-8' }));
+  a.download = 'aulas-pendentes.csv'; document.body.appendChild(a); a.click(); a.remove();
+};
+
+// ---------- lembretes ----------
+const notifOn = () => { try { return 'Notification' in window && Notification.permission === 'granted' && localStorage.getItem(KEY + '-notif') === '1'; } catch { return false; } };
+const updateBell = () => { $('bell').textContent = notifOn() ? '🔔' : '🔕'; $('bell').title = notifOn() ? 'Lembretes ativados (clique para desativar)' : 'Ativar lembretes'; };
+function checkReminders(force) {
+  if (!notifOn() || !cloud) return;
+  const hoje = items.filter(i => !i.concluida && diffDays(i.data) === 0).length, atr = items.filter(i => !i.concluida && diffDays(i.data) < 0).length;
+  if (!hoje && !atr) return;
+  const k = iso(today());
+  try { if (!force && localStorage.getItem(KEY + '-notified') === k) return; localStorage.setItem(KEY + '-notified', k); } catch {}
+  const body = [hoje && `${hoje} aula${hoje > 1 ? 's' : ''} para hoje`, atr && `${atr} atrasada${atr > 1 ? 's' : ''}`].filter(Boolean).join(' · ');
+  try { new Notification('Aulas pendentes', { body }); } catch {}
+}
+$('bell').onclick = async () => {
+  if (!('Notification' in window)) { toast('Este navegador não suporta lembretes.'); return; }
+  try {
+    if (notifOn()) { localStorage.setItem(KEY + '-notif', '0'); toast('Lembretes desativados.'); }
+    else if (await Notification.requestPermission() === 'granted') { localStorage.setItem(KEY + '-notif', '1'); toast('Lembretes ativados. Você será avisado ao abrir o site.'); checkReminders(true); }
+    else toast('Permissão de notificação negada no navegador.');
+  } catch {}
+  updateBell();
+};
+setInterval(() => checkReminders(false), 30 * 60 * 1000);
+
+// ---------- tema ----------
 $('theme').onclick = () => {
   const dark = document.documentElement.dataset.theme === 'dark' ||
     (!document.documentElement.dataset.theme && matchMedia('(prefers-color-scheme:dark)').matches);
@@ -307,8 +519,9 @@ $('theme').onclick = () => {
 };
 try { const t = localStorage.getItem(KEY + '-theme'); if (t) document.documentElement.dataset.theme = t; } catch {}
 
-render();
+render(); updateBell();
 
+// ---------- login e nuvem ----------
 const loadScript = src => new Promise((ok, fail) => { const t = document.createElement('script'); t.src = src; t.onload = ok; t.onerror = fail; document.head.appendChild(t); });
 async function initCloud() {
   $('auth').hidden = false;
@@ -320,6 +533,7 @@ async function initCloud() {
   } catch { $('auth-err').textContent = 'Sem conexão com o servidor.'; return; }
   firebase.initializeApp(FIREBASE_CONFIG);
   const auth = firebase.auth(), db = firebase.firestore();
+  try { localStorage.getItem(KEY); db.enablePersistence({ synchronizeTabs: true }).catch(() => {}); } catch {}
   let creating = false, unsub = null;
   const email = u => u.trim().toLowerCase();
   const erros = {
@@ -333,10 +547,12 @@ async function initCloud() {
     $('auth-title').textContent = c ? 'Criar conta' : 'Entrar';
     $('auth-go').textContent = c ? 'Criar conta' : 'Entrar';
     $('auth-alt').textContent = c ? 'Já tenho conta' : 'Criar conta';
+    $('auth-sub').textContent = c ? 'Escolha um e-mail e uma senha para guardar as suas aulas.' : 'Entre para ver as suas aulas.';
     $('ap').autocomplete = c ? 'new-password' : 'current-password';
     $('auth-forgot').hidden = c;
     $('auth-err').textContent = $('auth-ok').textContent = '';
   };
+  setMode(false);
   $('auth-alt').onclick = () => setMode(!creating);
   $('auth-forgot').onclick = async () => {
     $('auth-err').textContent = $('auth-ok').textContent = '';
@@ -355,22 +571,29 @@ async function initCloud() {
     } catch (err) { $('auth-err').textContent = erros[err.code] || 'Erro: ' + err.code; }
   });
   $('logout').onclick = () => auth.signOut();
+  const logged = on => { $('auth').hidden = on; $('logout').hidden = $('csv').hidden = $('bell').hidden = !on; };
   auth.onAuthStateChanged(user => {
     if (unsub) { unsub(); unsub = null; }
     if (user) {
       const ref = db.collection('users').doc(user.uid);
-      $('auth').hidden = true; $('logout').hidden = false; $('ap').value = '';
-      unsub = ref.onSnapshot(snap => {
-        if (!snap.exists) { cloud = ref; save(); return; }
-        cloud = ref; items = snap.data().items || []; render();
-      }, () => { $('auth').hidden = false; $('auth-err').textContent = 'Sem permissão para ler os dados.'; });
+      logged(true); $('ap').value = '';
+      unsub = ref.onSnapshot({ includeMetadataChanges: true }, snap => {
+        if (!snap.exists) {
+          if (snap.metadata.fromCache) return;
+          cloud = ref; items = legacy(); goal = 0; log = {}; save(); render(); return;
+        }
+        const d = snap.data(); cloud = ref;
+        items = (d.items || []).map(norm); goal = d.goal || 0; log = d.log || {};
+        render(); checkReminders(false);
+      }, () => { logged(false); $('auth-err').textContent = 'Sem permissão para ler os dados.'; });
     } else {
-      cloud = null; items = []; render();
-      $('auth').hidden = false; $('logout').hidden = true;
+      cloud = null; items = []; goal = 0; log = {}; filter = 'Todas'; view = 'pend'; query = ''; onlyLate = false; $('q').value = '';
+      render(); logged(false);
     }
   });
 }
 if (FIREBASE_CONFIG) initCloud();
+if ('serviceWorker' in navigator && location.protocol.startsWith('http')) navigator.serviceWorker.register('sw.js').catch(() => {});
 </script>
 </body>
 </html>
